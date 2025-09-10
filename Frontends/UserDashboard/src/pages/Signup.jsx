@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Signup.css";
+import { RxCross1 } from "react-icons/rx";
 
 const Signup = ({ onClose, onSwitchToLogin }) => {
   const [formData, setFormData] = useState({
@@ -67,7 +68,9 @@ const Signup = ({ onClose, onSwitchToLogin }) => {
       <div className="modal signup-modal">
         <div className="modal-header">
           <h2>Create Account</h2>
-          <button className="close-btn" onClick={onClose}>&times;</button>
+           <button className="close-btn" onClick={onClose}>
+                        <RxCross1 size={24} />
+                      </button>
         </div>
 
         <form onSubmit={handleSubmit} className="signup-form">

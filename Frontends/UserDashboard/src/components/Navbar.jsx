@@ -84,24 +84,26 @@ const Navbar = ({ openLoginPopup, openSignupPopup }) => {
               <span>Dashboard</span>
             </div>
           )}
-          {/* <NavLink to="/community" className="sidebar-item">
+          <NavLink to="/community" className="sidebar-item">
             <FaUsers className="sidebar-icon" color="#28a745" />
             <span>Community</span>
-          </NavLink> */}
+          </NavLink>
+
+          
           <NavLink to="/blog" className="sidebar-item">
             <FaBlog className="sidebar-icon" color="#ff5722" />
             <span>Blog</span>
           </NavLink>
-          {/* <NavLink to="/case-studies" className="sidebar-item">
+          <NavLink to="/case-studies" className="sidebar-item">
             <FaBookOpen className="sidebar-icon" color="#17a2b8" />
             <span>Case Studies</span>
-          </NavLink> */}
+          </NavLink>
 
 
-          {/* <NavLink to="/careers" className="sidebar-item">
+          <NavLink to="/careers" className="sidebar-item">
             <FaBriefcase className="sidebar-icon" color="#6f42c1" />
             <span>Careers</span>
-          </NavLink> */}
+          </NavLink>
 
 
           <NavLink to="/about" className="sidebar-item">

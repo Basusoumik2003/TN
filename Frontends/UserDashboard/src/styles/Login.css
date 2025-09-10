@@ -53,6 +53,11 @@
   cursor: pointer;
   color: #999;
 }
+.close-btn:hover {
+  transform: scale(0.9);
+  background: #fbeeee; /* darker red on hover */
+}
+
 
 /* Form group */
 .form-group {

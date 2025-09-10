@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../styles/Login.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/Login.css";
+import { RxCross1 } from "react-icons/rx";
 
 const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -17,22 +18,22 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
 
     if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
     if (!formData.email) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = "Email is invalid";
     }
 
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
     } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = "Password must be at least 6 characters";
     }
 
     setErrors(newErrors);
@@ -47,40 +48,42 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
     setErrors({});
 
     try {
-      const response = await fetch('https://auth-service-lphz.onrender.com/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://auth-service-lphz.onrender.com/api/auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await response.json();
 
       if (!response.ok) {
-        setErrors({ general: data.message || 'Invalid credentials' });
+        setErrors({ general: data.message || "Invalid credentials" });
         return;
       }
 
       // ✅ Save token
-      localStorage.setItem('token', data.token);
+      localStorage.setItem("token", data.token);
 
       // ✅ Save entire user object
-      localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem("user", JSON.stringify(data.user));
 
       // ✅ Save only u_id separately (important!)
-      localStorage.setItem('userId', data.user.u_id);
+      localStorage.setItem("userId", data.user.u_id);
 
       if (onLogin) onLogin(data.user);
       if (onClose) onClose();
 
       // ✅ Redirect based on role
-      if (data.user.role === 'U' || data.user.role === 'user') {
-        navigate('/userDashboard');
-      } else if (data.user.role === 'O' || data.user.role === 'organization') {
-        navigate('/orgDashboard');
+      if (data.user.role === "U" || data.user.role === "user") {
+        navigate("/userDashboard");
+      } else if (data.user.role === "O" || data.user.role === "organization") {
+        navigate("/orgDashboard");
       }
-
     } catch (err) {
-      setErrors({ general: 'Server error. Please try again later.' });
+      setErrors({ general: "Server error. Please try again later." });
     } finally {
       setLoading(false);
     }
@@ -94,7 +97,7 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
           <p>Sign in to your account</p>
           {onClose && (
             <button className="close-btn" onClick={onClose}>
-              ×
+              <RxCross1 size={24} />
             </button>
           )}
         </div>
@@ -107,10 +110,12 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={errors.email ? 'error' : ''}
+              className={errors.email ? "error" : ""}
               placeholder="Enter your email"
             />
-            {errors.email && <span className="error-message">{errors.email}</span>}
+            {errors.email && (
+              <span className="error-message">{errors.email}</span>
+            )}
           </div>
 
           <div className="form-group">
@@ -120,22 +125,24 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className={errors.password ? 'error' : ''}
+              className={errors.password ? "error" : ""}
               placeholder="Enter your password"
             />
-            {errors.password && <span className="error-message">{errors.password}</span>}
+            {errors.password && (
+              <span className="error-message">{errors.password}</span>
+            )}
           </div>
 
           {errors.general && <p className="error-message">{errors.general}</p>}
 
           <button type="submit" className="auth-btn" disabled={loading}>
-            {loading ? 'Signing In...' : 'Sign In'}
+            {loading ? "Signing In..." : "Sign In"}
           </button>
         </form>
 
         <div className="auth-footer">
           <p>
-            Don’t have an account?{' '}
+            Don’t have an account?{" "}
             <button className="link-btn" onClick={onSwitchToSignup}>
               Sign Up
             </button>

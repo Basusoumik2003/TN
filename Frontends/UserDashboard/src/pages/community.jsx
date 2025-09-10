@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-//import Navbar from "../components/Navbar";
-import Footer from "../components/Footer.jsx"
+import Footer from "../components/Footer.jsx"                 
 import "../styles/community.css"
 import { FaBell, FaUserCircle, FaSearch } from "react-icons/fa"
 
@@ -320,3 +319,8 @@ export default function Community({ user, isAuthenticated, onLogout, onUserUpdat
     
   )
 }
+
+
+
+
+
