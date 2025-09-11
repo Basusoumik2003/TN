@@ -4,7 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../styles/userNavbar.css";
 import WalletPopup from "../pages/wallet";
-import { FaBars, FaLeaf, FaUserTie, FaSignOutAlt, FaInfoCircle, FaEnvelope } from "react-icons/fa";
+import { FaBars, FaUserTie, FaSignOutAlt, FaInfoCircle, FaEnvelope } from "react-icons/fa";
 import { MdDashboard, MdUpload, MdEdit, MdHandshake, MdAccountBalanceWallet } from "react-icons/md";
 
 const Navbar = ({ onAuthChange }) => {
@@ -22,36 +22,34 @@ const Navbar = ({ onAuthChange }) => {
     setIsWalletModalOpen(false);
   };
 
-const handleLogout = async () => {
-  try {
-    await fetch("/api/auth/logout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
-    localStorage.removeItem("token");
+      localStorage.removeItem("token");
 
-    // Notify parent about logout
-    if (onAuthChange) {
-      onAuthChange(null);
+      if (onAuthChange) {
+        onAuthChange(null);
+      }
+
+      toast.success("Logged out successfully!", { autoClose: 2000, theme: "colored" });
+
+      setTimeout(() => {
+        navigate("/Home");
+      }, 2200);
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("Logout failed!", { autoClose: 2000, theme: "colored" });
     }
+  };
 
-    toast.success("Logged out successfully!", { autoClose: 2000, theme: "colored" });
-
-    setTimeout(() => {
-      navigate("/Home");
-    }, 2200);
-  } catch (error) {
-    console.error("Logout error:", error);
-    toast.error("Logout failed!", { autoClose: 2000, theme: "colored" });
-  }
-};
-
-
-  // 🔹 Close sidebar when clicking outside
+  // Close sidebar when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
@@ -72,13 +70,13 @@ const handleLogout = async () => {
 
   return (
     <div className="user-navbar">
+      {/* Left section: menu + logo + sidebar */}
       <div className="user-left-section">
         <FaBars className="user-menu-icon" onClick={() => setSidebarOpen(!sidebarOpen)} />
         <div className="user-logo">
-  <img src="/GoCarbonPositive_LOGO.svg" alt="CarbonCredit Logo" className="user-logo-icon" />
-  <span className="user-logo-text">CarbonCredit</span>
-</div>
-
+          <img src="/GoCarbonPositive_LOGO.svg" alt="CarbonCredit Logo" className="user-logo-icon" />
+          <span className="user-logo-text">CarbonCredit</span>
+        </div>
 
         {sidebarOpen && (
           <div className="sidebar-dropdown" ref={sidebarRef}>
@@ -118,43 +116,44 @@ const handleLogout = async () => {
         )}
       </div>
 
+      {/* Center section: wallet */}
       <div className="user-nav-links user-nav-links-center">
-        <div className="user-nav-item" onClick={openWalletModal} style={{
-          padding: '0.3rem 1rem',
-          borderRadius: '12px',
-          background: 'none',
-          boxShadow: 'none',
-          transition: 'transform 0.18s',
-          cursor: 'pointer',
-          alignItems: 'center',
-          display: 'flex',
-        }}
-        onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.08)'}
-        onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-        >
-          <MdAccountBalanceWallet className="icon" style={{ fontSize: '6rem', marginRight: '0.7rem', color: '#111', filter: 'none' }} />
-          <span className="Nav-text" style={{ fontWeight: 600, fontSize: '1.1rem', color: '#111' }}>Wallet</span>
+        <div className="user-nav-item wallet-nav-item" onClick={openWalletModal}>
+          <MdAccountBalanceWallet className="wallet-icon" />
+          <span className="wallet-text">Wallet</span>
         </div>
       </div>
 
+      {/* Right section: profile */}
       <div className="user-right-section">
-        <NavLink to="/profile" className={({ isActive }) => `user-nav-item ${isActive ? "active-link" : ""} profile-icon`} style={{
-          width: '32px', height: '32px', borderRadius: '50%', background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.2s, transform 0.18s',
-        }}
-        onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.12)'}
-        onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+        <NavLink
+          to="/profile"
+          className={({ isActive }) => `user-nav-item ${isActive ? "active-link" : ""} profile-icon`}
+          style={{
+            width: '32px',
+            height: '32px',
+            borderRadius: '50%',
+            background: '#f3f4f6',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'background 0.2s, transform 0.18s',
+          }}
+          onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.12)'}
+          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
         >
           <FaUserTie style={{ color: '#2e7d32', fontSize: '1.3rem', transition: 'color 0.2s' }} />
         </NavLink>
       </div>
 
-      {isWalletModalOpen && (
-        <div className="wallet-modal-overlay" onClick={closeWalletModal}>
-          <div className="wallet-modal-content" onClick={(e) => e.stopPropagation()}>
-            <WalletPopup onClose={closeWalletModal} />
-          </div>
-        </div>
-      )}
+      {/* Wallet modal */}
+     {isWalletModalOpen && (
+  <div className="wallet-modal-overlay" onClick={closeWalletModal}>
+    <div className="wallet-modal-content" onClick={(e) => e.stopPropagation()}>
+      <WalletPopup onClose={closeWalletModal} />
+    </div>
+  </div>
+)}
     </div>
   );
 };

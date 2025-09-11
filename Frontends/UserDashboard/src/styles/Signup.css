@@ -24,6 +24,9 @@
 
 /* Modal header */
 .modal-header {
+  position: relative;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #ddd;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -37,11 +40,14 @@
 }
 
 .close-btn {
-  background: none;
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  font-size: 24px;
+  background: transparent;
   border: none;
-  font-size: 1.4rem;
+  color: #333;
   cursor: pointer;
-  color: #666;
 }
 
 /* Form */
@@ -96,7 +102,7 @@ select.input {
 
 /* Button */
 .btn-primary {
-  background-color: #4caf50;
+  background-color: #2e7d32; /* rich green */
   color: white;
   padding: 0.75rem;
   border: none;
@@ -105,7 +111,7 @@ select.input {
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
 }
 
 .btn-primary:disabled {
@@ -114,7 +120,9 @@ select.input {
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #43a047;
+  background-color: #43a047; /* lighter green */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(67, 160, 71, 0.4);
 }
 
 /* Footer */
@@ -126,14 +134,17 @@ select.input {
 .link-btn {
   background: none;
   border: none;
-  color: #4caf50;
+  color: #2e7d32;
   cursor: pointer;
   font-weight: 500;
   font-size: 0.95rem;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .link-btn:hover {
+  color: #43a047;
   text-decoration: underline;
+  transform: translateY(-1px);
 }
 
 /* Animation */
@@ -146,23 +157,4 @@ select.input {
     opacity: 1;
     transform: translateY(0);
   }
-}
-.close-btn {
-  position: absolute;
-  top: 16px;
-  right: 20px;
-  font-size: 24px;
-  background: transparent;
-  border: none;
-  color: #333;
-  cursor: pointer;
-}
-
-.modal-header {
-  position: relative;
-  padding: 1rem 2rem;
-  border-bottom: 1px solid #ddd;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
