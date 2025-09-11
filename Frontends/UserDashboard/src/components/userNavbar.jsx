@@ -34,15 +34,11 @@ const Navbar = ({ onAuthChange }) => {
 
       localStorage.removeItem("token");
 
-      if (onAuthChange) {
-        onAuthChange(null);
-      }
+      if (onAuthChange) onAuthChange(null);
 
       toast.success("Logged out successfully!", { autoClose: 2000, theme: "colored" });
 
-      setTimeout(() => {
-        navigate("/Home");
-      }, 2200);
+      setTimeout(() => navigate("/Home"), 2200);
     } catch (error) {
       console.error("Logout error:", error);
       toast.error("Logout failed!", { autoClose: 2000, theme: "colored" });
@@ -57,15 +53,10 @@ const Navbar = ({ onAuthChange }) => {
       }
     };
 
-    if (sidebarOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
+    if (sidebarOpen) document.addEventListener("mousedown", handleClickOutside);
+    else document.removeEventListener("mousedown", handleClickOutside);
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [sidebarOpen]);
 
   return (
@@ -80,35 +71,79 @@ const Navbar = ({ onAuthChange }) => {
 
         {sidebarOpen && (
           <div className="sidebar-dropdown" ref={sidebarRef}>
-            <NavLink to="/userDashboard" className={({ isActive }) => `sidebar-item ${isActive ? "active-link" : ""}`}>
+            <NavLink
+              to="/userDashboard"
+              className={({ isActive }) => `sidebar-item ${isActive ? "active-link" : ""}`}
+              onClick={() => setSidebarOpen(false)}
+            >
               <MdDashboard className="sidebar-icon sidebar-blue" />
               <span>Dashboard</span>
             </NavLink>
-            <NavLink to="/upload" className={({ isActive }) => `sidebar-item ${isActive ? "active-link" : ""}`}>
+
+            <NavLink
+              to="/upload"
+              className={({ isActive }) => `sidebar-item ${isActive ? "active-link" : ""}`}
+              onClick={() => setSidebarOpen(false)}
+            >
               <MdUpload className="sidebar-icon sidebar-purple" />
               <span>Assets</span>
             </NavLink>
-            <NavLink to="/blog" className={({ isActive }) => `sidebar-item ${isActive ? "active-link" : ""}`}>
+
+            <NavLink
+              to="/blog"
+              className={({ isActive }) => `sidebar-item ${isActive ? "active-link" : ""}`}
+              onClick={() => setSidebarOpen(false)}
+            >
               <MdEdit className="sidebar-icon sidebar-orange" />
               <span>Blog</span>
             </NavLink>
-            <NavLink to="/engage" className={({ isActive }) => `sidebar-item ${isActive ? "active-link" : ""}`}>
+
+            <NavLink
+              to="/engage"
+              className={({ isActive }) => `sidebar-item ${isActive ? "active-link" : ""}`}
+              onClick={() => setSidebarOpen(false)}
+            >
               <MdHandshake className="sidebar-icon sidebar-teal" />
               <span>Engage</span>
             </NavLink>
-            <div className="sidebar-item" onClick={openWalletModal}>
+
+            <div
+              className="sidebar-item"
+              onClick={() => {
+                openWalletModal();
+                setSidebarOpen(false);
+              }}
+            >
               <MdAccountBalanceWallet className="sidebar-icon sidebar-gold" style={{ fontSize: '1.8rem' }} />
               <span>Wallet</span>
             </div>
-            <NavLink to="/about" className={({ isActive }) => `sidebar-item ${isActive ? "active-link" : ""}`}>
+
+            <NavLink
+              to="/about"
+              className={({ isActive }) => `sidebar-item ${isActive ? "active-link" : ""}`}
+              onClick={() => setSidebarOpen(false)}
+            >
               <FaInfoCircle className="sidebar-icon sidebar-purple" />
               <span>About</span>
             </NavLink>
-            <NavLink to="/contact" className={({ isActive }) => `sidebar-item ${isActive ? "active-link" : ""}`}>
+
+            <NavLink
+              to="/contact"
+              className={({ isActive }) => `sidebar-item ${isActive ? "active-link" : ""}`}
+              onClick={() => setSidebarOpen(false)}
+            >
               <FaEnvelope className="sidebar-icon sidebar-yellow" />
               <span>Contact</span>
             </NavLink>
-            <div className="sidebar-item sidebar-logout" onClick={handleLogout} style={{ cursor: "pointer" }}>
+
+            <div
+              className="sidebar-item sidebar-logout"
+              onClick={() => {
+                handleLogout();
+                setSidebarOpen(false);
+              }}
+              style={{ cursor: "pointer" }}
+            >
               <FaSignOutAlt className="sidebar-icon sidebar-red" />
               <span>Logout</span>
             </div>
@@ -147,13 +182,13 @@ const Navbar = ({ onAuthChange }) => {
       </div>
 
       {/* Wallet modal */}
-     {isWalletModalOpen && (
-  <div className="wallet-modal-overlay" onClick={closeWalletModal}>
-    <div className="wallet-modal-content" onClick={(e) => e.stopPropagation()}>
-      <WalletPopup onClose={closeWalletModal} />
-    </div>
-  </div>
-)}
+      {isWalletModalOpen && (
+        <div className="wallet-modal-overlay" onClick={closeWalletModal}>
+          <div className="wallet-modal-content" onClick={(e) => e.stopPropagation()}>
+            <WalletPopup onClose={closeWalletModal} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

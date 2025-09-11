@@ -516,10 +516,12 @@ const UserDashboard = () => {
               </div>
             ))}
           </div>
+          <Footer />
         </div>
 
-        <Footer />
+        {/* <Footer /> */}
       </div>
+      
     </div>
   );
 };
