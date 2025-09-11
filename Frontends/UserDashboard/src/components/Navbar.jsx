@@ -88,8 +88,6 @@ const Navbar = ({ openLoginPopup, openSignupPopup }) => {
             <FaUsers className="sidebar-icon" color="#28a745" />
             <span>Community</span>
           </NavLink>
-
-          
           <NavLink to="/blog" className="sidebar-item">
             <FaBlog className="sidebar-icon" color="#ff5722" />
             <span>Blog</span>

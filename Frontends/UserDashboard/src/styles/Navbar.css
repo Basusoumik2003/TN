@@ -5,10 +5,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 1.5rem; /* Reduced vertical padding for thinner navbar */
+  padding: 0.5rem 1.5rem;
   background-color: #ffffff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 100%;
 }
 
 /* Left side: logo */
@@ -19,9 +20,9 @@
 }
 
 .logo-icon {
-  height: 40px;        /* adjust as needed */
-  width: auto;         /* keep aspect ratio */
-  border-radius: 8px;  /* optional rounded edges */
+  height: 40px;
+  width: auto;
+  border-radius: 8px;
 }
 
 .logo-text {
@@ -30,17 +31,20 @@
   color: #333;
 }
 
-/* Right side: buttons */
+/* Right side: buttons / profile */
 .navbar-right {
   display: flex;
-  gap: 0.8rem; /* Slightly closer buttons */
+  gap: 0.8rem;
+  margin-left: auto;  /* stays on the right always */
+  align-items: center;
 }
 
+/* Buttons */
 .btn {
-  padding: 0.4rem 1rem; /* Thinner buttons */
+  padding: 0.4rem 1rem;
   border: none;
-  border-radius: 4px; /* Slightly sharper corners for slim feel */
-  font-size: 0.95rem; /* Slightly smaller text */
+  border-radius: 4px;
+  font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -103,7 +107,7 @@
 }
 
 .menu-icon {
-  font-size: 1.4rem; /* Slightly bigger if you want it to match overall thinner navbar look */
+  font-size: 1.4rem;
   cursor: pointer;
   margin-right: 8px;
 }
@@ -111,13 +115,17 @@
 /* Responsive tweaks */
 @media (max-width: 600px) {
   .home-navbar {
-    flex-direction: column;
-    gap: 0.8rem;
-    align-items: flex-start;
+    flex-direction: row;   /* ✅ keep row layout */
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .navbar-left {
+    flex: 1;
   }
 
   .navbar-right {
-    width: 100%;
-    justify-content: flex-start;
+    margin-left: auto;     /* ✅ stick to right */
+    justify-content: flex-end;
   }
 }
