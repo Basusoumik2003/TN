@@ -470,6 +470,7 @@ import {
   FaUsers,
 } from "react-icons/fa";
 import { FiTarget, FiShield } from "react-icons/fi";
+import Footer from "./Footer";
 
 // SVG Icons
 const TrendingUpIcon = () => (
@@ -794,6 +795,7 @@ const Overview = () => {
           );
         })}
       </div>
+      
 
       <div className="grid-2 lg-grid-2 gap-4">
         {/* Progress Trackers */}
@@ -872,6 +874,8 @@ const Overview = () => {
         </Card>
       </div>
     </motion.div>
+    
+    
   );
 };
 
