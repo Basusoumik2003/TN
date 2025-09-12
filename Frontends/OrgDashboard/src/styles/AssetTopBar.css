@@ -1,0 +1,93 @@
+.asset-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: clamp(8px, 2vw, 12px) clamp(12px, 3vw, 16px);
+  flex-wrap: wrap;
+  gap: clamp(8px, 2vw, 12px);
+}
+
+/* Left section */
+.topbar-left .title {
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  font-weight: 700;
+  margin: 0;
+}
+
+.topbar-left .subtitle {
+  margin-top: clamp(2px, 1vw, 4px);
+  color: #6b7280; /* gray */
+  font-size: clamp(0.75rem, 2vw, 0.9rem);
+}
+
+/* Right side buttons */
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 2vw, 12px);
+  flex-wrap: wrap;
+}
+
+.no-wrap { flex-wrap: nowrap !important; }
+
+.btn {
+  display: flex;
+  align-items: center;
+  padding: clamp(8px, 1.8vw, 10px) clamp(14px, 2.8vw, 18px);
+  border: 1px solid #d1d5db; /* gray-300 */
+  border-radius: clamp(4px, 1vw, 6px);
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: clamp(0.95rem, 2.5vw, 1.1rem); /* Larger text */
+  user-select: none;
+}
+
+.btn:hover {
+  background-color: #f3f4f6; /* light gray hover */
+}
+.btn:hover {
+  background-color: #21bd13; /* gray-100 */
+  border-color: #e5e7eb; /* Slightly darker border for better contrast on hover */
+  transform: translateY(-7px) scale(1.02); /* Optional subtle lift/scale for feedback; remove scale if unwanted */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow to enhance the "raised" feel */
+}
+
+/* Primary button (Add Asset) */
+.btn:active {
+  transform: translateY(0) scale(1); /* Reset on click for tactile feedback */
+} /* Primary button hover (ensure consistency) */
+.btn-primary:hover {
+  background-color: #ea580c; /* orange-600 */
+  border-color: #ea580c;
+  transform: translateY(-1px) scale(1.02); /* Match the scale if using it */
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3); /* Orange-themed shadow */
+}
+.btn-primary:hover {
+  background-color: #ea580c; /* orange-600 */
+}
+
+/* Bigger icons */
+.btn .icon {
+  width: clamp(26px, 3.5vw, 32px);
+  height: clamp(26px, 3.5vw, 32px);
+  margin-right: clamp(8px, 2vw, 10px);
+}
+
+/* Primary button (Add Asset) */
+.btn-primary {
+  background-color: #22c55e; /* green-500 */
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #16a34a; /* green-600 */
+}
+.btn-primary .icon {
+  width: clamp(26px, 3.5vw, 32px);
+  height: clamp(26px, 3.5vw, 32px);
+  margin-right: clamp(8px, 2vw, 10px);
+}
+
+

@@ -266,14 +266,14 @@ body::after {
 .red { background-color: var(--color-red-light); color: var(--color-red); }
 
 /* Logo Container */
-.logo-container {
+/* .logo-container {
   padding: var(--spacing-2);
   background: linear-gradient(135deg, var(--color-primary), var(--color-info));
   border-radius: var(--border-radius-sm);
   color: white;
   font-weight: 600;
   font-size: var(--font-size-lg);
-}
+} */
 
 /* Card Styles */
 .card {

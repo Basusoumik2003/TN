@@ -1,7 +1,5 @@
 import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-
-
 import {
   Card,
   CardContent,
@@ -36,18 +34,13 @@ import {
   FiEye,
   FiGrid,
   FiList,
-  FiPlus,
-  FiUpload,
-  FiDownload,
-  FiMapPin,
   FiTrendingUp,
   FiCalendar,
-  FiTruck,
   FiSettings,
 } from "react-icons/fi";
 import { FaTree, FaCar, FaIndustry, FaLeaf } from "react-icons/fa";
-import * as XLSX from "xlsx";
-import jsPDF from "jspdf";
+import AssetTopBar from "./AssetTopBar";
+
 
 // SVG Icons
 const GridIcon = () => (
@@ -84,74 +77,6 @@ const ListIcon = () => (
   </svg>
 );
 
-const PlusIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <line x1="12" y1="5" x2="12" y2="19" />
-    <line x1="5" y1="12" x2="19" y2="12" />
-  </svg>
-);
-
-const UploadIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" />
-  </svg>
-);
-
-const DownloadIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
-  </svg>
-);
-
-const MoreVerticalIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <circle cx="12" cy="5" r="1" />
-    <circle cx="12" cy="12" r="1" />
-    <circle cx="12" cy="19" r="1" />
-  </svg>
-);
-
-const MapIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4zM8 2v16M16 6v16" />
-  </svg>
-);
-
 const EyeIcon = () => <FiEye size={16} style={{ color: "#6366f1" }} />;
 
 const EditIcon = () => (
@@ -180,8 +105,6 @@ const TrashIcon = () => (
     <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h6a1 1 0 011 1v2" />
   </svg>
 );
-
-const MapPinIcon = () => <FiMapPin size={16} style={{ color: "#f59e0b" }} />;
 
 const CalendarIcon = () => (
   <FiCalendar size={16} style={{ color: "#8b5cf6" }} />
@@ -277,7 +200,6 @@ const FactoryIcon = () => <FaIndustry size={24} style={{ color: "#6b7280" }} />;
 
 const LeafIcon = () => <FaLeaf size={24} style={{ color: "#22c55e" }} />;
 
-// Add a modern fleet icon SVG
 const FleetIcon = () => (
   <svg
     width="22"
@@ -297,7 +219,6 @@ const FleetIcon = () => (
   </svg>
 );
 
-// Add a modern update icon SVG
 const UpdateIcon = () => (
   <svg
     width="20"
@@ -408,7 +329,7 @@ const AssetCard = ({ asset, onClick, onDelete }) => {
         {/* Location - Hide for EV and Solar assets */}
         {asset.type !== "EV" && asset.type !== "Solar" && (
           <div className="asset-location">
-            <MapPinIcon />
+            <FiMapPin size={16} style={{ color: "#f59e0b" }} />
             <span>{asset.location}</span>
           </div>
         )}
@@ -518,7 +439,7 @@ const AssetCard = ({ asset, onClick, onDelete }) => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            <PlusIcon />
+            <FiPlus size={16} />
             <span>Add</span>
           </motion.button>
 
@@ -692,10 +613,6 @@ const AssetManagement = () => {
   const [viewMode, setViewMode] = useState("grid");
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [showAssetDetails, setShowAssetDetails] = useState(false);
-  const [showBulkUpload, setShowBulkUpload] = useState(false);
-  // Add a state to track if the bulk upload button was clicked
-  const [bulkUploadActive, setBulkUploadActive] = useState(false);
-  const [showMap, setShowMap] = useState(false);
   const [filtersExpanded, setFiltersExpanded] = useState(false);
   const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -703,22 +620,22 @@ const AssetManagement = () => {
   const [toast, setToast] = useState({ show: false, message: "", type: "" });
   const navigate = useNavigate();
 
-  // 1. Add state for update modal and form data
+  // State for update modal and form data
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [updateFormData, setUpdateFormData] = useState(null);
 
-  // 2. Add handler to open update modal with pre-filled data
+  // Handler to open update modal with pre-filled data
   const handleOpenUpdateModal = () => {
     setUpdateFormData(selectedAsset?.originalData || {});
     setShowUpdateModal(true);
   };
 
-  // 3. Add handler for form field changes
+  // Handler for form field changes
   const handleUpdateFormChange = (field, value) => {
     setUpdateFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // 4. Add handler for update submit
+  // Handler for update submit
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -774,7 +691,6 @@ const AssetManagement = () => {
     } catch (err) {
       console.error("Error fetching assets:", err);
       setError("Failed to load assets. Please try again.");
-      // Fallback to empty array
       setAssets([]);
     } finally {
       setLoading(false);
@@ -784,16 +700,6 @@ const AssetManagement = () => {
   // Load assets on component mount
   React.useEffect(() => {
     fetchAssets();
-  }, []);
-
-  // Refresh assets when returning from AddAsset page
-  React.useEffect(() => {
-    const handleFocus = () => {
-      fetchAssets();
-    };
-
-    window.addEventListener("focus", handleFocus);
-    return () => window.removeEventListener("focus", handleFocus);
   }, []);
 
   // Filter state
@@ -858,8 +764,6 @@ const AssetManagement = () => {
   const handleDeleteAsset = async (asset) => {
     try {
       let response;
-
-      // Delete based on asset type
       switch (asset.type) {
         case "EV":
           response = await assetAPI.deleteEV(asset.originalData.ev_id);
@@ -875,9 +779,7 @@ const AssetManagement = () => {
       }
 
       if (response.status === "success") {
-        // Remove the asset from the local state
         setAssets((prevAssets) => prevAssets.filter((a) => a.id !== asset.id));
-        // Show success toast instead of alert
         showToast(`${asset.name} deleted successfully!`, "success");
       } else {
         showToast("Failed to delete asset. Please try again.", "error");
@@ -888,145 +790,6 @@ const AssetManagement = () => {
     }
   };
 
-  const exportAssets = (format) => {
-    const data = filteredAssets.map((asset) => ({
-      ID: asset.id,
-      Name: asset.name,
-      Type: asset.type,
-      Location: asset.location,
-      Credits: asset.creditsGenerated,
-      Status: asset.status,
-      Verified: asset.verified ? "Yes" : "No",
-      ...(asset.type === "EV" && {
-        Manufacturer: asset.originalData?.Manufacturers,
-        Model: asset.originalData?.Model,
-        "Purchase Year": asset.originalData?.Purchase_Year,
-      }),
-      ...(asset.type === "Solar" && {
-        "Installation Capacity": asset.originalData?.Installed_Capacity,
-        "Installation Date": asset.originalData?.Installation_Date,
-      }),
-      ...(asset.type === "Trees" && {
-        "Tree Name": asset.originalData?.TreeName,
-        "Botanical Name": asset.originalData?.BotanicalName,
-      }),
-    }));
-
-    if (format === "csv") {
-      // CSV Export
-      const csvRows = [];
-      const headers = Object.keys(data[0] || {});
-      csvRows.push(headers.join(","));
-      data.forEach((row) => {
-        csvRows.push(
-          headers.map((h) => JSON.stringify(row[h] ?? "")).join(",")
-        );
-      });
-      const csvString = csvRows.join("\n");
-      const blob = new Blob([csvString], { type: "text/csv" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "assets.csv";
-      a.click();
-      URL.revokeObjectURL(url);
-    } else if (format === "xlsx") {
-      // Excel Export
-      const ws = XLSX.utils.json_to_sheet(data);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Assets");
-      XLSX.writeFile(wb, "assets.xlsx");
-    } else if (format === "pdf") {
-      // PDF Export
-      const doc = new jsPDF();
-      const headers = Object.keys(data[0] || {});
-      let y = 10;
-      doc.setFontSize(12);
-      doc.text("Assets", 10, y);
-      y += 10;
-      // Headers
-      headers.forEach((h, i) => {
-        doc.text(h, 10 + i * 40, y);
-      });
-      y += 8;
-      // Rows
-      data.forEach((row) => {
-        headers.forEach((h, i) => {
-          doc.text(String(row[h] ?? ""), 10 + i * 40, y);
-        });
-        y += 8;
-        if (y > 270) {
-          doc.addPage();
-          y = 10;
-        }
-      });
-      doc.save("assets.pdf");
-    }
-  };
-
-  const [csvFile, setCsvFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
-
-  // Ref for file input
-  const csvInputRef = React.useRef();
-
-  // Handler for file input change
-  const handleCsvFileChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setCsvFile(e.target.files[0]);
-      handleCsvUpload(e.target.files[0]); // Immediately upload after selection
-    }
-  };
-
-  // Handler for CSV upload (now takes file as argument)
-  const handleCsvUpload = async (file) => {
-    if (!file) return;
-    setUploading(true);
-    try {
-      // Parse CSV using XLSX
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        const data = new Uint8Array(event.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
-        // Send parsed data to backend (replace URL with your actual endpoint)
-        try {
-          const response = await fetch(
-            "http://localhost:8080/api/assets/bulk-upload",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ assets: jsonData }),
-            }
-          );
-          if (response.ok) {
-            showToast("Bulk upload successful!", "success");
-            setCsvFile(null);
-            fetchAssets();
-          } else {
-            showToast(
-              "Bulk upload failed. Please check your CSV and try again.",
-              "error"
-            );
-          }
-        } catch (err) {
-          showToast("Bulk upload failed. Network or server error.", "error");
-        }
-        setUploading(false);
-      };
-      reader.onerror = () => {
-        showToast("Failed to read CSV file.", "error");
-        setUploading(false);
-      };
-      reader.readAsArrayBuffer(file);
-    } catch (err) {
-      showToast("Error processing CSV file.", "error");
-      setUploading(false);
-    }
-  };
-
   return (
     <motion.div
       className="space-y-6"
@@ -1034,82 +797,8 @@ const AssetManagement = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Page Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold">Asset Management</h1>
-          <p className="text-secondary mt-1">
-            Manage and monitor your carbon credit generating assets
-          </p>
-        </div>
-        <div className="flex items-center space-x-3">
-          <Button variant="outline" onClick={fetchAssets} disabled={loading}>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16" />
-            </svg>
-            <span className="ml-2">Refresh</span>
-          </Button>
-          <Button variant="outline" onClick={() => setShowMap(true)}>
-            <MapIcon />
-            <span className="ml-2">Map View</span>
-          </Button>
-
-          
-          <Button
-            variant="outline"
-            onClick={() => {
-              setShowBulkUpload(true);
-              setBulkUploadActive(true);
-            }}
-            className={
-              bulkUploadActive && showBulkUpload ? "bulk-upload-active" : ""
-            }
-          >
-            <UploadIcon />
-            <span className="ml-2">Bulk Upload</span>
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Button variant="outline">
-                <DownloadIcon />
-                <span className="ml-2">Export</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => exportAssets("csv")}>
-                Export as CSV
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => exportAssets("xlsx")}>
-                Export as Excel
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => exportAssets("pdf")}>
-                Export as PDF
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Button
-            onClick={() => {
-              console.log("Add Asset button clicked");
-              try {
-                navigate("/add-asset");
-                console.log("Navigation successful");
-              } catch (error) {
-                console.error("Navigation error:", error);
-              }
-            }}
-          >
-            <PlusIcon />
-            <span className="ml-2">Add Asset</span>
-          </Button>
-        </div>
-      </div>
+      {/* Page Header with AssetTopBar */}
+      <AssetTopBar fetchAssets={fetchAssets} filteredAssets={filteredAssets} />
 
       {/* Summary Cards */}
       <div className="grid-4 md-grid-4">
@@ -1288,7 +977,18 @@ const AssetManagement = () => {
                     <DropdownMenu>
                       <DropdownMenuTrigger>
                         <Button variant="ghost" size="sm">
-                          <MoreVerticalIcon />
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <circle cx="12" cy="5" r="1" />
+                            <circle cx="12" cy="12" r="1" />
+                            <circle cx="12" cy="19" r="1" />
+                          </svg>
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
@@ -1550,7 +1250,6 @@ const AssetManagement = () => {
                   </p>
                 </div>
               </div>
-              {/* Add View Fleet button below details */}
               <div className="button-row">
                 <button
                   className="update-asset-btn"
@@ -1573,93 +1272,6 @@ const AssetManagement = () => {
           )}
         </DialogContent>
       </Dialog>
-
-
-
-
-
-      {/* Map Modal */}
-      <Dialog open={showMap} onOpenChange={setShowMap}>
-        <DialogContent className="dialog-content-large">
-          <DialogHeader>
-            <DialogTitle>Asset Map</DialogTitle>
-            <DialogDescription>
-              Geographical distribution of your assets
-            </DialogDescription>
-          </DialogHeader>
-          <div className="h-96 bg-card-bg rounded-lg flex items-center justify-center">
-            <div className="text-center">
-              <MapPinIcon className="h-12 w-12 text-secondary mx-auto mb-4" />
-              <p className="text-secondary">
-                Interactive map will be displayed here
-              </p>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-
-
-
-
-
-      {/* Bulk Upload Modal */}
-      <Dialog
-        open={showBulkUpload}
-        onOpenChange={(open) => {
-          setShowBulkUpload(open);
-          if (!open) setBulkUploadActive(false);
-        }}
-      >
-        <DialogContent>
-          <div className="bulk-upload-modal">
-            <div className="bulk-upload-title">Bulk Upload Assets</div>
-            <div className="bulk-upload-desc">
-              Upload multiple assets at once using a CSV file.
-              <br />
-              Download the sample template and follow the format.
-            </div>
-            <div className="bulk-upload-dropzone">
-              <UploadIcon className="bulk-upload-icon" />
-              <p
-                className="text-secondary"
-                style={{ fontSize: "1.1rem", marginBottom: "1.5rem" }}
-              >
-                Drag and drop your CSV file here or click to select
-              </p>
-              <input
-                type="file"
-                accept=".csv"
-                style={{ display: "none" }}
-                ref={csvInputRef}
-                onChange={handleCsvFileChange}
-              />
-            </div>
-            <button
-              className="bulk-upload-btn"
-              onClick={() => csvInputRef.current && csvInputRef.current.click()}
-              disabled={uploading}
-            >
-              <UploadIcon style={{ width: 22, height: 22 }} />{" "}
-              {uploading ? "Uploading..." : "Upload CSV"}
-            </button>
-            <a
-              href="/sample-bulk-upload.csv"
-              download
-              className="bulk-upload-sample"
-            >
-              Download Sample CSV
-            </a>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-     
-
-
-
-
-
 
       {/* Update Modal */}
       <Dialog open={showUpdateModal} onOpenChange={setShowUpdateModal}>
@@ -1696,7 +1308,6 @@ const AssetManagement = () => {
                   maxWidth: "100%",
                 }}
               >
-                {/* Conditionally render fields based on asset type */}
                 {selectedAsset?.type === "EV" && (
                   <>
                     <div
@@ -1875,7 +1486,6 @@ const AssetManagement = () => {
                     </div>
                   </>
                 )}
-                {/* Solar asset update fields */}
                 {selectedAsset?.type === "Solar" && (
                   <>
                     <div
@@ -1978,7 +1588,6 @@ const AssetManagement = () => {
                     </div>
                   </>
                 )}
-                {/* Tree asset update fields */}
                 {selectedAsset?.type === "Trees" && (
                   <>
                     <div
@@ -2059,7 +1668,6 @@ const AssetManagement = () => {
                         }
                       />
                     </div>
-                    {/* Optionally add ImageURL and CreatedBy if you want to allow editing them */}
                   </>
                 )}
               </div>
@@ -2163,6 +1771,7 @@ const AssetManagement = () => {
         <span style={{ fontWeight: "500", lineHeight: "1.4" }}>
           {toast.message}
         </span>
+       
       </div>
     </motion.div>
   );
