@@ -46,28 +46,31 @@ body {
 
 .hero-buttons {
   display: flex;
-  gap: 20px;
+  justify-content: center; /* ✅ Center align buttons */
+  gap: 15px;               /* space between buttons */
   flex-wrap: wrap;
+  margin-top: 1rem;        /* add some breathing room */
 }
 
 .btn {
-  padding: 15px 30px;
-  border-radius: 50px;
+  padding: 10px 20px;      /* ✅ smaller button size */
+  border-radius: 40px;
   font-weight: 600;
+  font-size: 0.95rem;      /* ✅ smaller text */
   cursor: pointer;
   transition: all 0.3s ease;
   border: 2px solid #1e8449;  /* border around both buttons */
-  background: transparent;    /* no blue / no default background */
+  background: transparent;    /* no default background */
   color: #1e8449;             /* green text */
   text-decoration: none;
 }
 
-/* Hover effect for all buttons */
 .btn:hover {
   background: #27ae60; /* green background on hover */
   color: #fff;         /* white text on hover */
   transform: translateY(-2px); /* subtle lift */
 }
+
 .hero-image .image-container {
   max-width: 550px;
   height: auto;
@@ -146,8 +149,6 @@ body {
   margin-bottom: 15px;
 }
 
-
-
 /* ===== Responsive Design ===== */
 
 /* Tablets */
@@ -200,8 +201,8 @@ body {
 /* Very Small Screens */
 @media (max-width: 480px) {
   .btn {
-    padding: 12px 20px;
-    font-size: 0.9rem;
+    padding: 8px 16px;  /* even smaller on very small screens */
+    font-size: 0.85rem;
   }
 
   .professional-feature-card {
