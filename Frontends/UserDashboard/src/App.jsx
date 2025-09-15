@@ -34,7 +34,7 @@ const App = () => {
 
   const RedirectToOrg = () => {
     useEffect(() => {
-      window.location.href = "https://orgdashboard.onrender.com";
+      window.location.href = "http://localhost:5174/";
     }, []);
     return <p>Redirecting to Organization Dashboard...</p>;
   };

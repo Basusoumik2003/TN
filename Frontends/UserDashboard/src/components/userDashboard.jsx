@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from "react";
+import { FaLeaf, FaCar, FaSun } from "react-icons/fa";
+import { GiRank3 } from "react-icons/gi";
+import { MdOutlineAttachMoney } from "react-icons/md";
 import { Eye } from "lucide-react";
 import Navbar from "./userNavbar";
-import Card from "./Card";
-import Panel from "./Panel";
-import InfoBlock from "./InfoBlock";
+// import Card from "./Card";
+// import Panel from "./Panel";
+// import InfoBlock from "./InfoBlock";
 import ActivityItem from "./ActivityItem";
-import VehicleItem from "./VehicleItem";
-import RecentItem from "./RecentItem";
+// import VehicleItem from "./VehicleItem";
+// import RecentItem from "./RecentItem";
 import Footer from "./Footer";
 import '../styles/userDashboard.css';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Wallet from "../pages/wallet";
+
+import Cardsection from "./cardsection";
 
 const UserDashboard = () => {
   const navigate = useNavigate();
@@ -365,7 +370,7 @@ const UserDashboard = () => {
                 className="view-asset flex items-center gap-2"
                 onClick={handleViewAssets}
               >
-                <Eye className="w-4 h-4" />
+                
                 View Assets
               </button>
 
@@ -377,82 +382,9 @@ const UserDashboard = () => {
         </div>
 
         {/* Overview Cards */}
-        <div className="card-grid">
-          <Card
-            title="Total Credits"
-            value={credit}
-            change={getPercentChangeText()}
-            color="blue"
-          />
-          <Card
-            title="CO₂ Offset"
-            value={`${totalCO2Tons} tons`}
-            change={co2ChangeText}
-            color="green"
-          />
-
-          <Card
-            title="Value Created"
-            value={`₹${totalValue.toLocaleString()}`}
-            change={valueChangeText}
-            color="orange"
-          />
-
-          <Card
-            title="Rank"
-            value={rankValue}
-            change={rankText}
-            color="purple"
-          />
-
-        </div>
+       
         {/* Main Panels */}
-        <div className="panel-grid">
-          <Panel
-            title="Electric Vehicles"
-            status={`Live EVs : ${evList.length}`}
-            className="panel-ev"
-          >
-            <InfoBlock label="Total Distance" value={`${totalDistance.toLocaleString()} km`} />
-            <InfoBlock label="CO₂ Saved" value={`${co2Saved.toFixed(0)} kg`} />
-            <InfoBlock label="Credits Earned" value={`${evCredits}`} />
-            {firstEV && (
-              <VehicleItem
-                name={firstEV.manufacturers || "EV Vehicle"}
-                distance={`${firstDistance} km this month`}
-                status="Active"
-              />
-            )}
-
-          </Panel>
-
-          <Panel
-            title="Tree Plantations"
-            status={`Growing: ${treeList.length}`}
-            className="panel-trees"
-          >
-            <InfoBlock label="Trees Planted" value={`${totalTreesPlanted}`} />
-            <InfoBlock label="CO₂ Absorbed" value={`${co2Absorbed.toLocaleString()} kg`} />
-            <InfoBlock label="Credits Earned" value={`${treeCredits}`} />
-            {recentTree && (
-              <RecentItem
-                name={`${recentTree.treename || "New Tree"}`}
-                location={recentTree.location || "Unknown Location"}
-                status="Thriving"
-              />
-            )}
-
-          </Panel>
-
-          <Panel title="Solar Energy" status={`Generating  : ${solarList.length}`} className="panel-solar">
-            <InfoBlock label="Energy Generated" value={`${totalEnergyGenerated.toLocaleString()} kWh`} />
-            <InfoBlock label="Bill Saved" value={`₹${billSaved.toLocaleString()}`} />
-            <InfoBlock label="Credits Earned" value={`${solarCredits}`} />
-            <div className="text-sm mt-2">☀️ Today’s Weather: Sunny, 28°C - Optimal for solar generation</div>
-
-          </Panel>
-
-        </div>
+        <Cardsection/>
 
         {/* Recent Activity */}
         <div className="recent-section">
