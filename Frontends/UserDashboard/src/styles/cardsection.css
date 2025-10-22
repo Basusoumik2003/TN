@@ -21,7 +21,7 @@
   transition: transform 0.2s ease-in-out;
   flex: 1;
   min-width: 220px;
-  background: #261e56; /* Light greenish background */
+  background: #271a71; /* Light greenish background */
 }
 
 .card:hover {

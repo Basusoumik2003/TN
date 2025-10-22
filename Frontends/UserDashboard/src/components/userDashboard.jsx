@@ -10,7 +10,7 @@ import Navbar from "./userNavbar";
 import ActivityItem from "./ActivityItem";
 // import VehicleItem from "./VehicleItem";
 // import RecentItem from "./RecentItem";
-import Footer from "./Footer";
+import Footer from  "./Footer";
 import '../styles/userDashboard.css';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
