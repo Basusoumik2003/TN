@@ -13,6 +13,7 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // ✅ Handle form changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -22,12 +23,13 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
     }
   };
 
+  // ✅ Validation logic
   const validateForm = () => {
     const newErrors = {};
     if (!formData.email) {
       newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
+      newErrors.email = "Invalid email format";
     }
 
     if (!formData.password) {
@@ -40,6 +42,7 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // ✅ Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -48,47 +51,62 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
     setErrors({});
 
     try {
-      const response = await fetch(
-        "https://auth-service-lphz.onrender.com/api/auth/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
       const data = await response.json();
+      console.log("🟢 Login API Response:", data);
 
+      // ❌ If request failed
       if (!response.ok) {
-        setErrors({ general: data.message || "Invalid credentials" });
+        setErrors({ general: data.message || "Invalid email or password" });
         return;
       }
 
-      // ✅ Save token
+      // ✅ Ensure backend sends user + token
+      if (!data.user || !data.token) {
+        setErrors({ general: "Login failed. Missing token or user data." });
+        return;
+      }
+
+      // ✅ Check if user verified
+      if (!data.user.verified) {
+        setErrors({ general: "Please verify your email first." });
+        return;
+      }
+
+      // ✅ Save data to localStorage
       localStorage.setItem("token", data.token);
-
-      // ✅ Save entire user object
       localStorage.setItem("user", JSON.stringify(data.user));
-
-      // ✅ Save only u_id separately (important!)
       localStorage.setItem("userId", data.user.u_id);
 
       if (onLogin) onLogin(data.user);
       if (onClose) onClose();
 
-      // ✅ Redirect based on role
-      if (data.user.role === "U" || data.user.role === "user") {
+      // ✅ Role-based redirect (use role_name from backend)
+      const role = data.user.role_name?.toUpperCase();
+
+      if (role === "USER") {
         navigate("/userDashboard");
-      } else if (data.user.role === "O" || data.user.role === "organization") {
+      } else if (role === "ORGANIZATION") {
         navigate("/orgDashboard");
+      } else if (role === "ADMIN") {
+        navigate("/adminDashboard");
+      } else {
+        navigate("/"); // fallback
       }
     } catch (err) {
+      console.error("❌ Login Error:", err);
       setErrors({ general: "Server error. Please try again later." });
     } finally {
       setLoading(false);
     }
   };
 
+  // ✅ UI Rendering
   return (
     <div className="modal-overlay">
       <div className="auth-card">
@@ -103,6 +121,7 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
+          {/* Email */}
           <div className="form-group">
             <label>Email</label>
             <input
@@ -118,6 +137,7 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
             )}
           </div>
 
+          {/* Password */}
           <div className="form-group">
             <label>Password</label>
             <input
@@ -133,7 +153,10 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
             )}
           </div>
 
-          {errors.general && <p className="error-message">{errors.general}</p>}
+          {/* General error */}
+          {errors.general && (
+            <p className="error-message center">{errors.general}</p>
+          )}
 
           <button type="submit" className="auth-btn" disabled={loading}>
             {loading ? "Signing In..." : "Sign In"}
