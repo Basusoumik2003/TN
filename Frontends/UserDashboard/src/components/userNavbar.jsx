@@ -4,24 +4,37 @@ import "react-toastify/dist/ReactToastify.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../styles/userNavbar.css";
 import WalletPopup from "../pages/wallet";
-import { FaBars, FaUserTie, FaSignOutAlt, FaInfoCircle, FaEnvelope } from "react-icons/fa";
-import { MdDashboard, MdUpload, MdEdit, MdHandshake, MdAccountBalanceWallet } from "react-icons/md";
+import {
+  FaBars,
+  FaUserTie,
+  FaSignOutAlt,
+  FaInfoCircle,
+  FaEnvelope,
+} from "react-icons/fa";
+import {
+  MdDashboard,
+  MdUpload,
+  MdEdit,
+  MdHandshake,
+  MdAccountBalanceWallet,
+} from "react-icons/md";
 
 const Navbar = ({ onAuthChange }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const navigate = useNavigate();
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const sidebarRef = useRef(null);
+  const navigate = useNavigate();
 
-  const openWalletModal = () => {
-    setIsWalletModalOpen(true);
-    setSidebarOpen(false);
-  };
+  // ✅ Load user from localStorage on mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
-  const closeWalletModal = () => {
-    setIsWalletModalOpen(false);
-  };
-
+  // ✅ Logout handler
   const handleLogout = async () => {
     try {
       await fetch("/api/auth/logout", {
@@ -33,10 +46,15 @@ const Navbar = ({ onAuthChange }) => {
       });
 
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      setUser(null);
 
       if (onAuthChange) onAuthChange(null);
 
-      toast.success("Logged out successfully!", { autoClose: 2000, theme: "colored" });
+      toast.success("Logged out successfully!", {
+        autoClose: 2000,
+        theme: "colored",
+      });
 
       setTimeout(() => navigate("/Home"), 2200);
     } catch (error) {
@@ -45,7 +63,17 @@ const Navbar = ({ onAuthChange }) => {
     }
   };
 
-  // Close sidebar when clicking outside
+  // ✅ Wallet modal controls
+  const openWalletModal = () => {
+    setIsWalletModalOpen(true);
+    setSidebarOpen(false);
+  };
+
+  const closeWalletModal = () => {
+    setIsWalletModalOpen(false);
+  };
+
+  // ✅ Close sidebar when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
@@ -53,7 +81,8 @@ const Navbar = ({ onAuthChange }) => {
       }
     };
 
-    if (sidebarOpen) document.addEventListener("mousedown", handleClickOutside);
+    if (sidebarOpen)
+      document.addEventListener("mousedown", handleClickOutside);
     else document.removeEventListener("mousedown", handleClickOutside);
 
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -63,9 +92,16 @@ const Navbar = ({ onAuthChange }) => {
     <div className="user-navbar">
       {/* Left section: menu + logo + sidebar */}
       <div className="user-left-section">
-        <FaBars className="user-menu-icon" onClick={() => setSidebarOpen(!sidebarOpen)} />
+        <FaBars
+          className="user-menu-icon"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+        />
         <div className="user-logo">
-          <img src="/GoCarbonPositive_LOGO.svg" alt="CarbonCredit Logo" className="user-logo-icon" />
+          <img
+            src="/GoCarbonPositive_LOGO.svg"
+            alt="CarbonCredit Logo"
+            className="user-logo-icon"
+          />
           <span className="user-logo-text">CarbonCredit</span>
         </div>
 
@@ -73,7 +109,9 @@ const Navbar = ({ onAuthChange }) => {
           <div className="sidebar-dropdown" ref={sidebarRef}>
             <NavLink
               to="/userDashboard"
-              className={({ isActive }) => `sidebar-item ${isActive ? "active-link" : ""}`}
+              className={({ isActive }) =>
+                `sidebar-item ${isActive ? "active-link" : ""}`
+              }
               onClick={() => setSidebarOpen(false)}
             >
               <MdDashboard className="sidebar-icon sidebar-blue" />
@@ -82,7 +120,9 @@ const Navbar = ({ onAuthChange }) => {
 
             <NavLink
               to="/upload"
-              className={({ isActive }) => `sidebar-item ${isActive ? "active-link" : ""}`}
+              className={({ isActive }) =>
+                `sidebar-item ${isActive ? "active-link" : ""}`
+              }
               onClick={() => setSidebarOpen(false)}
             >
               <MdUpload className="sidebar-icon sidebar-purple" />
@@ -91,7 +131,9 @@ const Navbar = ({ onAuthChange }) => {
 
             <NavLink
               to="/blog"
-              className={({ isActive }) => `sidebar-item ${isActive ? "active-link" : ""}`}
+              className={({ isActive }) =>
+                `sidebar-item ${isActive ? "active-link" : ""}`
+              }
               onClick={() => setSidebarOpen(false)}
             >
               <MdEdit className="sidebar-icon sidebar-orange" />
@@ -100,7 +142,9 @@ const Navbar = ({ onAuthChange }) => {
 
             <NavLink
               to="/engage"
-              className={({ isActive }) => `sidebar-item ${isActive ? "active-link" : ""}`}
+              className={({ isActive }) =>
+                `sidebar-item ${isActive ? "active-link" : ""}`
+              }
               onClick={() => setSidebarOpen(false)}
             >
               <MdHandshake className="sidebar-icon sidebar-teal" />
@@ -114,13 +158,18 @@ const Navbar = ({ onAuthChange }) => {
                 setSidebarOpen(false);
               }}
             >
-              <MdAccountBalanceWallet className="sidebar-icon sidebar-gold" style={{ fontSize: '1.8rem' }} />
+              <MdAccountBalanceWallet
+                className="sidebar-icon sidebar-gold"
+                style={{ fontSize: "1.8rem" }}
+              />
               <span>Wallet</span>
             </div>
 
             <NavLink
               to="/about"
-              className={({ isActive }) => `sidebar-item ${isActive ? "active-link" : ""}`}
+              className={({ isActive }) =>
+                `sidebar-item ${isActive ? "active-link" : ""}`
+              }
               onClick={() => setSidebarOpen(false)}
             >
               <FaInfoCircle className="sidebar-icon sidebar-purple" />
@@ -129,7 +178,9 @@ const Navbar = ({ onAuthChange }) => {
 
             <NavLink
               to="/contact"
-              className={({ isActive }) => `sidebar-item ${isActive ? "active-link" : ""}`}
+              className={({ isActive }) =>
+                `sidebar-item ${isActive ? "active-link" : ""}`
+              }
               onClick={() => setSidebarOpen(false)}
             >
               <FaEnvelope className="sidebar-icon sidebar-yellow" />
@@ -159,32 +210,39 @@ const Navbar = ({ onAuthChange }) => {
         </div>
       </div>
 
-      {/* Right section: profile */}
+      {/* ✅ Right section: profile / login */}
       <div className="user-right-section">
-        <NavLink
-          to="/profile"
-          className={({ isActive }) => `user-nav-item ${isActive ? "active-link" : ""} profile-icon`}
-          style={{
-            width: '32px',
-            height: '32px',
-            borderRadius: '50%',
-            background: '#f3f4f6',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transition: 'background 0.2s, transform 0.18s',
-          }}
-          onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.12)'}
-          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-        >
-          <FaUserTie style={{ color: '#2e7d32', fontSize: '1.3rem', transition: 'color 0.2s' }} />
-        </NavLink>
+        {user ? (
+          <NavLink to="/profile" className="user-profile-link">
+            {user.profilePic ? (
+              <img
+                src={user.profilePic}
+                alt="User"
+                className="w-8 h-8 rounded-full object-cover border-2 border-green-700 hover:scale-110 transition-transform"
+              />
+            ) : (
+              <span className="text-green-700 font-semibold hover:underline">
+                {user.username || user.email?.split("@")[0]}
+              </span>
+            )}
+          </NavLink>
+        ) : (
+          <NavLink
+            to="/login"
+            className="bg-green-700 text-white px-3 py-1 rounded hover:bg-green-800 transition-colors"
+          >
+            Login
+          </NavLink>
+        )}
       </div>
 
       {/* Wallet modal */}
       {isWalletModalOpen && (
         <div className="wallet-modal-overlay" onClick={closeWalletModal}>
-          <div className="wallet-modal-content" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="wallet-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
             <WalletPopup onClose={closeWalletModal} />
           </div>
         </div>

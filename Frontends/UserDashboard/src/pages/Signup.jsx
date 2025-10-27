@@ -111,6 +111,7 @@ const Signup = ({ onClose, onSwitchToLogin }) => {
               className="input"
               required 
             />
+            <br />
             <input 
               type="email" 
               name="email" 
@@ -120,6 +121,7 @@ const Signup = ({ onClose, onSwitchToLogin }) => {
               className="input"
               required 
             />
+            <br />
             <input 
               type="password" 
               name="password" 
@@ -129,6 +131,7 @@ const Signup = ({ onClose, onSwitchToLogin }) => {
               className="input"
               required 
             />
+            <br />
             <select 
               name="role" 
               value={formData.role} 
@@ -140,6 +143,8 @@ const Signup = ({ onClose, onSwitchToLogin }) => {
               <option value="user">Private</option>
               <option value="organization">Organization</option>
             </select>
+            <br />
+            <br />
             {error.general && <p className="error-text">{error.general}</p>}
             <button type="submit" className="btn-primary" disabled={loading}>
               {loading ? "Sending OTP..." : "Sign Up"}
