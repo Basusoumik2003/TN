@@ -4,13 +4,18 @@ import "react-toastify/dist/ReactToastify.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../styles/userNavbar.css";
 import WalletPopup from "../pages/wallet";
-import {
+import { 
+  FaUser, 
+  FaCog, 
+  FaSignOutAlt, 
+  FaChevronDown,
+  FaUserCircle,
+  FaWallet,
+  FaChartLine,
   FaBars,
-  FaUserTie,
-  FaSignOutAlt,
   FaInfoCircle,
-  FaEnvelope,
-} from "react-icons/fa";
+  FaEnvelope
+} from 'react-icons/fa';
 import {
   MdDashboard,
   MdUpload,
@@ -22,8 +27,10 @@ import {
 const Navbar = ({ onAuthChange }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [user, setUser] = useState(null);
   const sidebarRef = useRef(null);
+  const profileDropdownRef = useRef(null);
   const navigate = useNavigate();
 
   // ✅ Load user from localStorage on mount
@@ -48,6 +55,7 @@ const Navbar = ({ onAuthChange }) => {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       setUser(null);
+      setIsProfileDropdownOpen(false);
 
       if (onAuthChange) onAuthChange(null);
 
@@ -73,6 +81,21 @@ const Navbar = ({ onAuthChange }) => {
     setIsWalletModalOpen(false);
   };
 
+  // ✅ Get user initials for avatar
+  const getInitials = (name) => {
+    if (!name) return 'U';
+    const names = name.trim().split(' ');
+    if (names.length === 1) return names[0].charAt(0).toUpperCase();
+    return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+  };
+
+  // ✅ Get display name
+  const getDisplayName = () => {
+    if (user?.username) return user.username;
+    if (user?.email) return user.email.split('@')[0];
+    return 'User';
+  };
+
   // ✅ Close sidebar when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -87,6 +110,21 @@ const Navbar = ({ onAuthChange }) => {
 
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [sidebarOpen]);
+
+  // ✅ Close profile dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+        setIsProfileDropdownOpen(false);
+      }
+    };
+
+    if (isProfileDropdownOpen)
+      document.addEventListener("mousedown", handleClickOutside);
+    else document.removeEventListener("mousedown", handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isProfileDropdownOpen]);
 
   return (
     <div className="user-navbar">
@@ -210,22 +248,103 @@ const Navbar = ({ onAuthChange }) => {
         </div>
       </div>
 
-      {/* ✅ Right section: profile / login */}
+      {/* ✅ Right section: Professional profile or login */}
       <div className="user-right-section">
         {user ? (
-          <NavLink to="/profile" className="user-profile-link">
-            {user.profilePic ? (
-              <img
-                src={user.profilePic}
-                alt="User"
-                className="w-8 h-8 rounded-full object-cover border-2 border-green-700 hover:scale-110 transition-transform"
-              />
-            ) : (
-              <span className="text-green-700 font-semibold hover:underline">
-                {user.username || user.email?.split("@")[0]}
-              </span>
+          <div className="user-profile-container" ref={profileDropdownRef}>
+            <div 
+              onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+              style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%' }}
+            >
+              {/* Avatar with status badge */}
+              <div style={{ position: 'relative' }}>
+                <div className="user-profile-avatar">
+                  {user.profilePic ? (
+                    <img 
+                      src={user.profilePic} 
+                      alt={getDisplayName()} 
+                      style={{ 
+                        width: '100%', 
+                        height: '100%', 
+                        borderRadius: '50%', 
+                        objectFit: 'cover' 
+                      }}
+                    />
+                  ) : (
+                    getInitials(user.username || user.email)
+                  )}
+                </div>
+                {/* Status indicator - online */}
+                <div className="user-status-badge"></div>
+              </div>
+
+              {/* User Info */}
+              <div className="user-profile-info">
+                <div className="user-profile-name">{getDisplayName()}</div>
+              </div>
+
+              {/* Dropdown Icon */}
+              <FaChevronDown className="user-profile-dropdown-icon" />
+            </div>
+
+            {/* Dropdown Menu */}
+            {isProfileDropdownOpen && (
+              <div className="user-profile-dropdown">
+                {/* Header Section */}
+                <div className="user-profile-dropdown-header">
+                  <div className="user-profile-dropdown-name">{getDisplayName()}</div>
+                  <div className="user-profile-dropdown-email">{user.email || 'user@example.com'}</div>
+                </div>
+
+                {/* Menu Items */}
+                <NavLink 
+                  to="/profile" 
+                  className="user-profile-dropdown-item"
+                  onClick={() => setIsProfileDropdownOpen(false)}
+                >
+                  <FaUserCircle style={{ color: '#3b82f6' }} />
+                  <span>My Profile</span>
+                </NavLink>
+
+                <NavLink 
+                  to="/userDashboard" 
+                  className="user-profile-dropdown-item"
+                  onClick={() => setIsProfileDropdownOpen(false)}
+                >
+                  <FaChartLine style={{ color: '#10b981' }} />
+                  <span>Dashboard</span>
+                </NavLink>
+
+                <div 
+                  className="user-profile-dropdown-item"
+                  onClick={() => {
+                    setIsProfileDropdownOpen(false);
+                    openWalletModal();
+                  }}
+                >
+                  <FaWallet style={{ color: '#f59e0b' }} />
+                  <span>My Wallet</span>
+                </div>
+
+                <NavLink 
+                  to="/settings" 
+                  className="user-profile-dropdown-item"
+                  onClick={() => setIsProfileDropdownOpen(false)}
+                >
+                  <FaCog style={{ color: '#64748b' }} />
+                  <span>Settings</span>
+                </NavLink>
+
+                <div 
+                  className="user-profile-dropdown-item logout" 
+                  onClick={handleLogout}
+                >
+                  <FaSignOutAlt />
+                  <span>Logout</span>
+                </div>
+              </div>
             )}
-          </NavLink>
+          </div>
         ) : (
           <NavLink
             to="/login"
