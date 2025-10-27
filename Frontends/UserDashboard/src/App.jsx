@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import "./App.css";
 import Home from './pages/Home';
 import UserDashboard from './components/userDashboard';
 // import OrgDashboard from '../../OrgDashboard/frontend/src/pages/OrgDashboard'
