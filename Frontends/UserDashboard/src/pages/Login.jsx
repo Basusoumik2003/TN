@@ -13,7 +13,7 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ Handle form changes
+  // ✅ Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -23,7 +23,7 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
     }
   };
 
-  // ✅ Validation logic
+  // ✅ Validate form before submit
   const validateForm = () => {
     const newErrors = {};
     if (!formData.email) {
@@ -42,7 +42,7 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // ✅ Submit handler
+  // ✅ Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -51,7 +51,7 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
     setErrors({});
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch("https://tn-backend-5.onrender.com/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -62,7 +62,7 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
 
       // ❌ If request failed
       if (!response.ok) {
-        setErrors({ general: data.message || "Invalid email or password" });
+        setErrors({ general: data.message || data.error || "Invalid email or password" });
         return;
       }
 
@@ -72,7 +72,7 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
         return;
       }
 
-      // ✅ Check if user verified
+      // ✅ Check if user is verified (updated for 'verified' column)
       if (!data.user.verified) {
         setErrors({ general: "Please verify your email first." });
         return;
@@ -86,7 +86,7 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
       if (onLogin) onLogin(data.user);
       if (onClose) onClose();
 
-      // ✅ Role-based redirect (use role_name from backend)
+      // ✅ Role-based redirect
       const role = data.user.role_name?.toUpperCase();
 
       if (role === "USER") {
@@ -106,7 +106,7 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
     }
   };
 
-  // ✅ UI Rendering
+  // ✅ Render UI
   return (
     <div className="modal-overlay">
       <div className="auth-card">

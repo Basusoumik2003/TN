@@ -32,17 +32,18 @@ const Signup = ({ onClose, onSwitchToLogin }) => {
     setError({});
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/register", {
+      const response = await fetch("https://tn-backend-5.onrender.com/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
       const data = await response.json();
-      if (!response.ok) {
-        setError({ general: data.message || "Signup failed" });
-        return;
-      }
+if (!response.ok) {
+  setError({ general: data.message || data.error || "Signup failed" });
+  setLoading(false);
+  return;
+}
 
       setTempEmail(formData.email);
       setShowOTP(true);
@@ -59,7 +60,7 @@ const Signup = ({ onClose, onSwitchToLogin }) => {
     setError({});
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/verify", {
+      const response = await fetch("https://tn-backend-5.onrender.com/api/auth/verify", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ email: tempEmail, otp }),

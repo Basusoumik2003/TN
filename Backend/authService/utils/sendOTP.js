@@ -8,7 +8,14 @@ const sendOTP = async (email, otp) => {
     text: `Your verification code is: ${otp}`,
   };
 
-  await transporter.sendMail(mailOptions);
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log("✉️  OTP sent:", info.response || info);
+    return info;
+  } catch (err) {
+    console.error("❌ sendOTP error:", err);
+    throw err; // important: rethrow so caller knows mail failed
+  }
 };
 
 module.exports = sendOTP;
