@@ -32,7 +32,7 @@ const Signup = ({ onClose, onSwitchToLogin }) => {
     setError({});
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/register", {
+      const response = await fetch("https://tn-backend-3.onrender.com/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -59,7 +59,7 @@ const Signup = ({ onClose, onSwitchToLogin }) => {
     setError({});
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/verify", {
+      const response = await fetch("https://tn-backend-3.onrender.com/api/auth/verify", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ email: tempEmail, otp }),

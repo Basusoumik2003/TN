@@ -1,311 +1,394 @@
-import React from 'react';
-import '../styles/CaseStudy.css';
+import React, { useState } from "react";
+import "../styles/CaseStudy.css";
 
-const CaseStudy = () => {
+/**
+ * CaseStudy.jsx
+ * Single-page React component that recreates the 5 screenshots in sequence:
+ * 1. Hero / Project Overview
+ * 2. Impact Summary / Project Story
+ * 3. Timeline
+ * 4. Testimonials
+ * 5. Related Case Studies + share CTA
+ *
+ * All class names are prefixed with caseStudy- to avoid collisions.
+ *
+ * Buttons use dummy navigation via window.location.href or simple JS actions.
+ */
+
+const stats = [
+  { title: "CO₂ OFFSET", value: "12,000 tons" },
+  { title: "TREES PLANTED", value: "500,000" },
+  { title: "RENEWABLE ENERGY", value: "8.2M kWh" },
+  { title: "COMMUNITIES IMPACTED", value: "24" },
+];
+
+const timelineItems = [
+  {
+    id: 1,
+    date: "Jan 2022",
+    title: "Project Kickoff",
+    desc:
+      "Baseline carbon assessment and stakeholder alignment. We engaged local partners to ensure continuity and capacity building while monitoring biodiversity with satellite data.",
+  },
+  {
+    id: 2,
+    date: "Apr 2022",
+    title: "Implementation",
+    desc: "Tree planting and solar microgrid installation phase.",
+  },
+  {
+    id: 3,
+    date: "Dec 2022",
+    title: "Key Achievements",
+    desc: "Reached 12k tons CO₂ offset; 500k+ trees planted.",
+  },
+  {
+    id: 4,
+    date: "Aug 2023",
+    title: "Completion",
+    desc: "Ongoing monitoring and community training complete.",
+  },
+];
+
+const testimonials = [
+  {
+    name: "Amina N.",
+    role: "Community Leader",
+    text:
+      "Energy access transformed our clinic—refrigeration for vaccines and evening care are now possible.",
+  },
+  {
+    name: "Jonas P.",
+    role: "Project Manager",
+    text:
+      "We tracked survival rates rigorously. The microgrid reliability exceeded 99% after phase two.",
+  },
+  {
+    name: "GreenRoots NGO",
+    role: "Partner Organization",
+    text:
+      "The carbon sequestration results are transparent and verifiable—setting a new benchmark.",
+  },
+];
+
+const related = [
+  { id: "solar", title: "Solar for Schools", loc: "Ghana" },
+  { id: "mangrove", title: "Mangrove Revival", loc: "Indonesia" },
+  { id: "biogas", title: "Community Biogas", loc: "India" },
+  { id: "savanna", title: "Savanna Restoration", loc: "Tanzania" },
+];
+
+export default function CaseStudy() {
+  const [activeTimeline, setActiveTimeline] = useState(timelineItems[0].id);
+  const [galleryIndex, setGalleryIndex] = useState(0);
+
+  const handleReadReport = () => {
+    window.location.href = "/read-report"; // dummy route
+  };
+
+  const handleShare = async () => {
+    const shareData = {
+      title: "Green Valley Reforestation - Case Study",
+      text: "Check out this case study.",
+      url: window.location.href,
+    };
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (e) {
+        alert("Share canceled.");
+      }
+    } else {
+      // fallback: copy link
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        alert("Link copied to clipboard!");
+      } catch {
+        alert("Unable to copy link. URL: " + window.location.href);
+      }
+    }
+  };
+
+  const handlePlayVideo = () => {
+    alert("Play video — replace with modal or video player.");
+  };
+
+  const openCase = (id) => {
+    // dummy navigation to a case detail
+    window.location.href = `/case/${id}`;
+  };
+
   return (
-    <div className="case-study-page">
-      {/* Hero Section */}
-      <section className="hero">
-        <div className="container">
-          <div className="hero-content">
-            <div className="badge">Case Study</div>
-            <h1 className="hero-title">
-              How Tech Corporation Reduced 2,400 Tons of CO₂ Using Our Platform
-            </h1>
-            <p className="hero-description">
-              A leading technology company achieved carbon neutrality 18 months ahead of schedule 
-              while saving $1.2M in operational costs through intelligent carbon tracking and optimization.
+    <div className="caseStudy-page">
+      {/* NAVBAR */}
+      <header className="caseStudy-navbar">
+        <div className="caseStudy-navbar-left">
+          <div className="caseStudy-logo">
+            <div className="caseStudy-logo-icon">🍃</div>
+            <span className="caseStudy-brand">EcoImpact</span>
+          </div>
+        </div>
+        <nav className="caseStudy-nav">
+          <a href="#overview">Overview</a>
+          <a href="#impact">Impact</a>
+          <a href="#story">Story</a>
+          <a href="#timeline">Timeline</a>
+          <a href="#media">Media</a>
+          <a href="#testimonials">Testimonials</a>
+          <a href="#reports">Reports</a>
+        </nav>
+        <div className="caseStudy-navbar-right">
+          <select className="caseStudy-filter">
+            <option>All</option>
+          </select>
+          <button
+            className="caseStudy-downloadBtn"
+            onClick={() => (window.location.href = "/download-report")}
+          >
+            Download Report
+          </button>
+        </div>
+      </header>
+
+      {/* BREADCRUMB + HERO */}
+      <section className="caseStudy-hero" id="overview">
+        <div className="caseStudy-breadcrumb">
+          Home / Case Studies / <span>Green Valley Reforestation</span>
+        </div>
+
+        <h1 className="caseStudy-mainTitle">
+          Our Impact Stories – Carbon Positive Case Studies
+        </h1>
+        <p className="caseStudy-subtitle">
+          Real-world results from our sustainability initiatives.
+        </p>
+
+        <div className="caseStudy-heroContent">
+          <div className="caseStudy-heroImage">
+            {/* replace with real project image */}
+            <img
+              src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&q=80&auto=format&fit=crop"
+              alt="project"
+            />
+          </div>
+
+          <aside className="caseStudy-overviewPanel" id="impact">
+            <div className="caseStudy-metaRow">
+              <span>🌱 Green Valley Project</span>
+              <span>📍 Kenya, East Africa</span>
+              <span>⏱ 20 months</span>
+            </div>
+
+            <h2>Project Overview</h2>
+            <p className="caseStudy-overviewText">
+              A multi-village reforestation and renewable energy initiative
+              designed to create long-term carbon sinks and energy access for
+              remote communities.
             </p>
-            <div className="hero-stats">
-              <div className="stat-item">
-                <div className="stat-icon">📉</div>
-                <span className="stat-text">2,400 tons CO₂ reduced</span>
+
+            <div className="caseStudy-statsGrid">
+              {stats.map((s, i) => (
+                <div className="caseStudy-statCard" key={i}>
+                  <div className="caseStudy-statIcon">🌿</div>
+                  <div className="caseStudy-statText">
+                    <div className="caseStudy-statTitle">{s.title}</div>
+                    <div className="caseStudy-statValue">{s.value}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="caseStudy-ctaRow">
+              <button className="caseStudy-btn primary" onClick={handleReadReport}>
+                Read Full Report
+              </button>
+              <button className="caseStudy-btn ghost" onClick={handleShare}>
+                Share
+              </button>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      {/* IMPACT SUMMARY & PROJECT STORY */}
+      <section className="caseStudy-impactStory">
+        <div className="caseStudy-impactSummary">
+          <h3>Impact Summary</h3>
+          <div className="caseStudy-impactCards">
+            {stats.map((s, i) => (
+              <div className="caseStudy-impactCard" key={i}>
+                <div className="caseStudy-impactIcon">🌱</div>
+                <div>
+                  <div className="caseStudy-impactLabel">{s.title}</div>
+                  <div className="caseStudy-impactValue">{s.value}</div>
+                </div>
               </div>
-              <div className="stat-item">
-                <div className="stat-icon">🎯</div>
-                <span className="stat-text">18 months ahead of target</span>
+            ))}
+          </div>
+        </div>
+
+        <div className="caseStudy-storyAndGallery" id="story">
+          <div className="caseStudy-projectStory">
+            <h3>Project Story</h3>
+            <p>
+              Starting as a grassroots movement to combat rapid deforestation,
+              the project united local communities, NGOs, and renewable energy
+              experts. While logistics and seasonal drought posed challenges, a
+              phased approach ensured survival rates above 85% and reliable
+              microgrid uptime.
+            </p>
+            <p>
+              Outcome: a thriving canopy recovery, measurable CO₂ sequestration,
+              and inclusive access to clean energy—powering schools, clinics,
+              and small businesses.
+            </p>
+
+            <div className="caseStudy-beforeAfter">
+              <h4>Before & After</h4>
+              <img
+                src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=900&q=70&auto=format&fit=crop"
+                alt="before after"
+              />
+            </div>
+          </div>
+
+          <aside className="caseStudy-gallery">
+            <div className="caseStudy-galleryHeader">Project Gallery</div>
+            <div className="caseStudy-galleryImage">
+              <img
+                src={[
+                  "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&q=80&auto=format&fit=crop",
+                  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1200&q=80&auto=format&fit=crop",
+                ][galleryIndex % 2]}
+                alt="gallery"
+              />
+            </div>
+            <div className="caseStudy-galleryControls">
+              <button
+                onClick={() => setGalleryIndex((g) => Math.max(0, g - 1))}
+                aria-label="prev"
+              >
+                ◀
+              </button>
+              <button onClick={() => setGalleryIndex((g) => g + 1)} aria-label="next">
+                ▶
+              </button>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      {/* VIDEO BANNER */}
+      <section className="caseStudy-videoBanner" id="media">
+        <div className="caseStudy-videoInner">
+          <button className="caseStudy-playBtn" onClick={handlePlayVideo}>
+            ▶ Play Video
+          </button>
+        </div>
+      </section>
+
+      {/* TIMELINE */}
+      <section className="caseStudy-timeline" id="timeline">
+        <h3>Timeline</h3>
+
+        <div className="caseStudy-timelineStrip">
+          {timelineItems.map((t) => (
+            <div
+              key={t.id}
+              className={`caseStudy-timeCard ${
+                activeTimeline === t.id ? "active" : ""
+              }`}
+              onClick={() => setActiveTimeline(t.id)}
+            >
+              <div className="caseStudy-timeDate">{t.date}</div>
+              <div className="caseStudy-timeTitle">{t.title}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="caseStudy-timelineDetail">
+          {timelineItems
+            .filter((i) => i.id === activeTimeline)
+            .map((t) => (
+              <div key={t.id}>
+                <h4>{t.title}</h4>
+                <p>{t.desc}</p>
+              </div>
+            ))}
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className="caseStudy-testimonials" id="testimonials">
+        <h3>Testimonials</h3>
+        <div className="caseStudy-testGrid">
+          {testimonials.map((t, i) => (
+            <div className="caseStudy-testCard" key={i}>
+              <div className="caseStudy-testHeader">
+                <div className="caseStudy-avatar">{t.name[0]}</div>
+                <div>
+                  <div className="caseStudy-testName">{t.name}</div>
+                  <div className="caseStudy-testRole">{t.role}</div>
+                </div>
+              </div>
+              <p className="caseStudy-quote">“{t.text}”</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* RELATED CASE STUDIES */}
+      <section className="caseStudy-related">
+        <h3>Related Case Studies</h3>
+        <div className="caseStudy-relatedGrid">
+          {related.map((r) => (
+            <div className="caseStudy-relatedCard" key={r.id}>
+              <img
+                src={`https://picsum.photos/seed/${r.id}/600/360`}
+                alt={r.title}
+              />
+              <div className="caseStudy-relatedBody">
+                <div className="caseStudy-relatedTag">Reforestation</div>
+                <div className="caseStudy-relatedTitle">{r.title}</div>
+                <div className="caseStudy-relatedLoc">{r.loc}</div>
+                <button
+                  className="caseStudy-btn primary small"
+                  onClick={() => openCase(r.id)}
+                >
+                  Read More
+                </button>
               </div>
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* SHARE CTA */}
+      <section className="caseStudy-shareCTA">
+        <div className="caseStudy-shareInner">
+          <div>
+            <h4>Share this Case Study</h4>
+            <p>Spread the word and inspire more climate action.</p>
+          </div>
+          <div className="caseStudy-shareBtns">
+            <button onClick={() => (window.location.href = "https://twitter.com/")}>
+              Twitter
+            </button>
+            <button onClick={() => (window.location.href = "https://linkedin.com/")}>
+              LinkedIn
+            </button>
           </div>
         </div>
       </section>
 
-      <div className="container main-content">
-        {/* Client Background */}
-        <section className="section">
-          <h2 className="section-title">Client Background</h2>
-          <div className="client-grid">
-            <div className="card">
-              <div className="card-header">
-                <div className="client-info">
-                  <div className="client-logo">TC</div>
-                  <div>
-                    <h3 className="client-name">TechCorp Industries</h3>
-                    <p className="client-subtitle">Global Technology Leader</p>
-                  </div>
-                </div>
-              </div>
-              <div className="card-content">
-                <div className="info-item">
-                  <span className="icon">📍</span>
-                  <span>San Francisco, CA (Global Operations)</span>
-                </div>
-                <div className="info-item">
-                  <span className="icon">👥</span>
-                  <span>15,000+ employees worldwide</span>
-                </div>
-                <div className="info-item">
-                  <span className="icon">🎯</span>
-                  <span>Industry: Cloud Computing & Software</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="card">
-              <div className="card-header">
-                <h3 className="card-title">Sustainability Goals</h3>
-              </div>
-              <div className="card-content">
-                <div className="goal-item">
-                  <div className="goal-header">
-                    <span>Carbon Neutral by 2025</span>
-                    <span className="badge badge-success">Achieved 2023</span>
-                  </div>
-                  <div className="progress-bar">
-                    <div className="progress-fill" style={{ width: '100%' }}></div>
-                  </div>
-                </div>
-                <div className="goal-item">
-                  <div className="goal-header">
-                    <span>50% Emission Reduction</span>
-                    <span className="badge badge-success">Exceeded</span>
-                  </div>
-                  <div className="progress-bar">
-                    <div className="progress-fill" style={{ width: '75%' }}></div>
-                  </div>
-                </div>
-                <div className="goal-item">
-                  <div className="goal-header">
-                    <span>100% Renewable Energy</span>
-                    <span className="badge badge-success">Complete</span>
-                  </div>
-                  <div className="progress-bar">
-                    <div className="progress-fill" style={{ width: '100%' }}></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Problem Statement */}
-        <section className="section">
-          <h2 className="section-title">The Challenge</h2>
-          <div className="challenge-card">
-            <div className="challenge-grid">
-              <div className="challenge-item">
-                <div className="challenge-icon">📊</div>
-                <h3 className="challenge-title">Inaccurate Tracking</h3>
-                <p className="challenge-description">
-                  Manual data collection led to 30% reporting errors and delayed insights
-                </p>
-              </div>
-              <div className="challenge-item">
-                <div className="challenge-icon">⚡</div>
-                <h3 className="challenge-title">High Emissions</h3>
-                <p className="challenge-description">
-                  Data centers and fleet operations generating 5,000+ tons CO₂ annually
-                </p>
-              </div>
-              <div className="challenge-item">
-                <div className="challenge-icon">📋</div>
-                <h3 className="challenge-title">Compliance Risk</h3>
-                <p className="challenge-description">
-                  Struggling to meet regulatory requirements and investor ESG expectations
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Our Solution */}
-        <section className="section">
-          <h2 className="section-title">Our Solution</h2>
-          <div className="solution-grid">
-            <div className="card">
-              <div className="card-header">
-                <h3 className="card-title">Platform Features Implemented</h3>
-              </div>
-              <div className="card-content">
-                <div className="feature-item">
-                  <div className="feature-dot"></div>
-                  <div>
-                    <h4 className="feature-title">Real-time Asset Tracking</h4>
-                    <p className="feature-description">
-                      Automated monitoring of 500+ data center assets and 200+ fleet vehicles
-                    </p>
-                  </div>
-                </div>
-                <div className="feature-item">
-                  <div className="feature-dot"></div>
-                  <div>
-                    <h4 className="feature-title">Carbon Credit Management</h4>
-                    <p className="feature-description">
-                      Streamlined purchasing and tracking of verified carbon credits
-                    </p>
-                  </div>
-                </div>
-                <div className="feature-item">
-                  <div className="feature-dot"></div>
-                  <div>
-                    <h4 className="feature-title">Predictive Analytics</h4>
-                    <p className="feature-description">
-                      AI-powered insights for emission reduction opportunities
-                    </p>
-                  </div>
-                </div>
-                <div className="feature-item">
-                  <div className="feature-dot"></div>
-                  <div>
-                    <h4 className="feature-title">Compliance Reporting</h4>
-                    <p className="feature-description">
-                      Automated generation of regulatory and ESG reports
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* <div className="dashboard-image">
-              <img src="https://via.placeholder.com/600x400/f0f0f0/666?text=CarbonTrack+Dashboard" alt="CarbonTrack Dashboard" />
-            </div> */}
-          </div>
-        </section>
-
-        {/* Implementation Process */}
-        <section className="section">
-          <h2 className="section-title">Implementation Process</h2>
-          <div className="timeline">
-            <div className="timeline-item">
-              <div className="timeline-number">1</div>
-              <div className="timeline-content">
-                <h3 className="timeline-title">Discovery & Planning</h3>
-                <p className="timeline-description">2 weeks - Asset audit and goal setting</p>
-              </div>
-              <div className="timeline-date">Week 1-2</div>
-            </div>
-            <div className="timeline-item">
-              <div className="timeline-number">2</div>
-              <div className="timeline-content">
-                <h3 className="timeline-title">Platform Setup & Integration</h3>
-                <p className="timeline-description">4 weeks - API connections and data migration</p>
-              </div>
-              <div className="timeline-date">Week 3-6</div>
-            </div>
-            <div className="timeline-item">
-              <div className="timeline-number">3</div>
-              <div className="timeline-content">
-                <h3 className="timeline-title">Team Training & Testing</h3>
-                <p className="timeline-description">2 weeks - User onboarding and system validation</p>
-              </div>
-              <div className="timeline-date">Week 7-8</div>
-            </div>
-            <div className="timeline-item">
-              <div className="timeline-number completed">4</div>
-              <div className="timeline-content">
-                <h3 className="timeline-title">Go-Live & Optimization</h3>
-                <p className="timeline-description">Ongoing - Full deployment and continuous improvement</p>
-              </div>
-              <div className="timeline-date">Week 9+</div>
-            </div>
-          </div>
-        </section>
-
-        {/* Results & Impact */}
-        <section className="section">
-          <h2 className="section-title">Results & Impact</h2>
-          <div className="results-grid">
-            <div className="result-card">
-              <div className="result-number green">2,400</div>
-              <div className="result-label">Tons CO₂ Reduced</div>
-              <div className="result-sublabel">48% reduction from baseline</div>
-            </div>
-            <div className="result-card">
-              <div className="result-number blue">1,200</div>
-              <div className="result-label">Credits Generated</div>
-              <div className="result-sublabel">Verified carbon offsets</div>
-            </div>
-            <div className="result-card">
-              <div className="result-number purple">$1.2M</div>
-              <div className="result-label">Cost Savings</div>
-              <div className="result-sublabel">Annual operational savings</div>
-            </div>
-            <div className="result-card">
-              <div className="result-number orange">100%</div>
-              <div className="result-label">Compliance</div>
-              <div className="result-sublabel">All regulatory requirements</div>
-            </div>
-          </div>
-
-          <div className="chart-card">
-            <div className="card-header">
-              <h3 className="card-title">Emission Reduction Timeline</h3>
-              <p className="card-description">Monthly CO₂ emissions before and after implementation</p>
-            </div>
-            <div className="chart-placeholder">
-              <div className="chart-content">
-                <div className="chart-icon">📉</div>
-                <div className="chart-text">48% reduction in 12 months</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Client Testimonial */}
-        <section className="section">
-          <h2 className="section-title">Client Testimonial</h2>
-          <div className="testimonial-card">
-            <blockquote className="testimonial-quote">
-              "CarbonTrack transformed our sustainability program from reactive to proactive. 
-              The platform's real-time insights helped us identify emission reduction opportunities 
-              we never knew existed. We achieved carbon neutrality 18 months ahead of schedule 
-              and saved over $1M in the process."
-            </blockquote>
-            <div className="testimonial-author">
-              <img src="https://via.placeholder.com/60x60/4f46e5/fff?text=SC" alt="Sarah Chen" className="author-image" />
-              <div className="author-info">
-                <div className="author-name">Sarah Chen</div>
-                <div className="author-title">Chief Sustainability Officer</div>
-                <div className="author-company">TechCorp Industries</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Download & CTA */}
-        <section className="section">
-          <div className="cta-card">
-            <h2 className="cta-title">Ready to Transform Your Carbon Strategy?</h2>
-            <p className="cta-description">
-              Join TechCorp and 500+ other companies reducing emissions with CarbonTrack
-            </p>
-            <div className="cta-buttons">
-              <button className="btn btn-primary btn-large">
-                📥 Download Full Case Study
-              </button>
-              <button className="btn btn-outline btn-large">
-                Book a Demo →
-              </button>
-            </div>
-            <div className="cta-links">
-              <a href="#" className="cta-link">See More Case Studies</a>
-              <a href="#" className="cta-link">Platform Overview</a>
-              <a href="#" className="cta-link">Contact Sales</a>
-            </div>
-          </div>
-        </section>
-      </div>
+      {/* FOOTER */}
+      <footer className="caseStudy-footer">
+        <div>© {new Date().getFullYear()} EcoImpact</div>
+        <div className="caseStudy-footerLinks">
+          <a href="/privacy">Privacy</a>
+          <a href="/terms">Terms</a>
+        </div>
+      </footer>
     </div>
   );
-};
-
-export default CaseStudy;
+}
