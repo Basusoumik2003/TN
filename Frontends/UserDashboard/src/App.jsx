@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import Home from './pages/Home';
 import UserDashboard from './components/userDashboard';
-// import OrgDashboard from '../../OrgDashboard/frontend/src/pages/OrgDashboard'
+// import OrgDashboard from '../../OrgDashboard/src/pages/OrgDashboard'
 import Upload from './components/upload';
 import Blog from './pages/blog';
 import Engage from './pages/engage';

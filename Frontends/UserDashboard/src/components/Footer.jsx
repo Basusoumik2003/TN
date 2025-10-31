@@ -1,9 +1,9 @@
 import React from "react";
+import { BsInstagram } from "react-icons/bs";
 import {
   FaFacebookF,
   FaTwitter,
   FaLinkedinIn,
-  FaInstagram,
 } from "react-icons/fa";
 import {
   HiOutlineMail,
@@ -61,7 +61,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="footer__social-icon"
             >
-              <FaInstagram />
+              <BsInstagram />
             </a>
           </div>
         </div>
@@ -116,7 +116,7 @@ const Footer = () => {
 
       {/* Footer Bottom */}
       <div className="footer__bottom">
-        © 2025 CarbonCredit Dashboard. All rights reserved.
+        © 2025 GoCarbon Positive | All rights reserved.
       </div>
     </footer>
   );
