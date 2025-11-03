@@ -129,6 +129,8 @@ const App = () => {
         <Route path="/orgDashboard" element={<RedirectToOrg />} />
         <Route path="/upload" element={<Upload />} />
         <Route path="/blog" element={<Blog isAuthenticated={isAuthenticated} />} />
+        <Route path="/blogs" element={<BlogList />} />
+        <Route path="/blog/:slug" element={<BlogDetail />} />
         <Route path="/engage" element={<Engage />} />
         <Route path="/wallet" element={<Wallet />} />
         <Route path="/profile" element={<Profile />} />
