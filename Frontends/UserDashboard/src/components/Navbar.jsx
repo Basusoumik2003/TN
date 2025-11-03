@@ -91,7 +91,7 @@ const Navbar = ({ openLoginPopup, openSignupPopup }) => {
           </NavLink>
 
           <NavLink
-            to="/blog"
+            to="/blogs"
             className="sidebar-item"
             onClick={() => handleSidebarItemClick()}
           >
