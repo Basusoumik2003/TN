@@ -60,11 +60,9 @@ if (!response.ok) {
     setError({});
 
     try {
-<<<<<<< HEAD
-      const response = await fetch("https://tn-backend-3.onrender.com/api/auth/verify", {
-=======
+
       const response = await fetch("https://tn-backend-5.onrender.com/api/auth/verify", {
->>>>>>> 45d717cce59c6693206b110dbab3c567313ed3b7
+
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ email: tempEmail, otp }),
