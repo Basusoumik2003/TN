@@ -6,7 +6,7 @@ const app = express();
 
 // ✅ Allow requests from frontend
 app.use(cors({
-  origin: 'http://localhost:5173', // your React app URL
+  origin: 'https://frontend-user-etef.onrender.com', // your React app URL
   credentials: true, // if you use cookies
 }));
 
