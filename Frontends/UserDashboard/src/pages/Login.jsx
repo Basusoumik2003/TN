@@ -51,11 +51,7 @@ const Login = ({ onLogin, onClose, onSwitchToSignup }) => {
     setErrors({});
 
     try {
-<<<<<<< HEAD
-      const response = await fetch("https://tn-backend-3.onrender.com/api/auth/login", {
-=======
       const response = await fetch("https://tn-backend-5.onrender.com/api/auth/login", {
->>>>>>> 45d717cce59c6693206b110dbab3c567313ed3b7
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
