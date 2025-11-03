@@ -8,6 +8,8 @@ import UserDashboard from './components/userDashboard';
 // import OrgDashboard from '../../OrgDashboard/src/pages/OrgDashboard'
 import Upload from './components/upload';
 import Blog from './pages/blog';
+import BlogList from './pages/BlogList';
+import BlogDetail from './pages/BlogDetail';
 import Engage from './pages/engage';
 import Wallet from './pages/wallet';
 import Profile from './pages/profile';
