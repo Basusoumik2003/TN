@@ -8,6 +8,8 @@ import UserDashboard from './components/userDashboard';
 // import OrgDashboard from '../../OrgDashboard/src/pages/OrgDashboard'
 import Upload from './components/upload';
 import Blog from './pages/blog';
+import BlogList from './pages/BlogList';
+import BlogDetail from './pages/BlogDetail';
 import Engage from './pages/engage';
 import Wallet from './pages/wallet';
 import Profile from './pages/profile';
@@ -127,6 +129,8 @@ const App = () => {
         <Route path="/orgDashboard" element={<RedirectToOrg />} />
         <Route path="/upload" element={<Upload />} />
         <Route path="/blog" element={<Blog isAuthenticated={isAuthenticated} />} />
+        <Route path="/blogs" element={<BlogList />} />
+        <Route path="/blog/:slug" element={<BlogDetail />} />
         <Route path="/engage" element={<Engage />} />
         <Route path="/wallet" element={<Wallet />} />
         <Route path="/profile" element={<Profile />} />

@@ -1,7 +1,7 @@
 import React from "react";
 import { FaTrophy, FaCoins, FaLeaf } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
-import "../styles/Wallet.css";
+import "../styles/wallet.css";
 
 const WalletPopup = ({ onClose }) => {
   return (
